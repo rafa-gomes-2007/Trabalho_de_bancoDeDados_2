@@ -115,3 +115,21 @@ DELIMITER ;
 
 CALL sp_AdicionarLivro('Novo Livro', 1, 2023, 250, 2, @mensagem);
 SELECT @mensagem;
+
+DELIMITER //
+
+CREATE PROCEDURE sp_AutorMaisAntigo(OUT nome_autor VARCHAR(255))
+BEGIN
+    SELECT CONCAT(Nome, ' ', Sobrenome)
+    FROM Autor
+    WHERE Data_Nascimento = (
+        SELECT MIN(Data_Nascimento)
+        FROM Autor
+    ) LIMIT 1 INTO nome_autor;
+END;
+//
+
+DELIMITER ;
+
+CALL sp_AutorMaisAntigo(@nome_autor);
+SELECT @nome_autor;
